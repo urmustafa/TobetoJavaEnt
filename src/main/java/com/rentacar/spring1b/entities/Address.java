@@ -1,9 +1,11 @@
 package com.rentacar.spring1b.entities;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
 @Table(name="address")
+@Data
 public class Address {
     @Id
     @Column(name="id")

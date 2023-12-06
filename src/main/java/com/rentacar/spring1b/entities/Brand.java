@@ -1,11 +1,16 @@
 package com.rentacar.spring1b.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
 @Table(name="brands")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Brand {
     @Id
     @Column(name="id")
@@ -16,5 +21,6 @@ public class Brand {
     private String name;
 
     @OneToMany(mappedBy = "brand")
+    @JsonIgnore
     private List<Car> cars;
 }

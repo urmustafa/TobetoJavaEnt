@@ -1,11 +1,13 @@
 package com.rentacar.spring1b.entities;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.List;
 
 @Entity
 @Table(name="customers")
+@Data
 public class Customer {
 
     @Id
