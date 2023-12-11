@@ -1,56 +1,50 @@
 package com.rentacar.spring1b.controllers;
 
-import com.rentacar.spring1b.dtos.requests.car.AddCarRequest;
-import com.rentacar.spring1b.dtos.requests.car.UpdateCarRequest;
-import com.rentacar.spring1b.dtos.responses.car.GetCarListResponse;
-import com.rentacar.spring1b.dtos.responses.car.GetCarResponse;
+import com.rentacar.spring1b.services.abstracts.CarService;
+import com.rentacar.spring1b.services.dtos.requests.car.AddCarRequest;
+import com.rentacar.spring1b.services.dtos.requests.car.UpdateCarRequest;
+import com.rentacar.spring1b.services.dtos.responses.car.GetCarListResponse;
+import com.rentacar.spring1b.services.dtos.responses.car.GetCarResponse;
 import com.rentacar.spring1b.entities.Car;
 import com.rentacar.spring1b.repositories.CarRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/cars")
+@AllArgsConstructor
 public class CarController {
 
-    private final CarRepository carRepository;
+    private final CarService carService;
 
-    CarController(CarRepository carRepository){
-        this.carRepository=carRepository;
+    @GetMapping("search")
+    public List<GetCarListResponse> search (@RequestParam String search){
+        return this.carService.search(search);
     }
     @GetMapping
-    public GetCarListResponse getAll(){
-        GetCarListResponse carList=new GetCarListResponse();
-        carList.setCars(carRepository.findAll());
-        return carList;
+    public List<GetCarListResponse> getAll(){
+
+        return carService.getAll();
     }
     @GetMapping("{id}")
-    public GetCarResponse getById(@PathVariable int id){
-        Car car=carRepository.findById(id).orElseThrow();
-        GetCarResponse carDto=new GetCarResponse();
+    public GetCarResponse getById(@PathVariable int id) {
 
-        carDto.setColor(car.getColor());
-        carDto.setName(carDto.getName());
-        carDto.setModelYear(car.getModelYear());
-        return carDto;
+        return carService.getById(id);
     }
     @PostMapping
-    public void add(@RequestBody AddCarRequest addCarRequest){
-        Car car=new Car();
-        car.setColor(addCarRequest.getColor());
-        car.setModelYear(addCarRequest.getYear());
+    public void add(@RequestBody AddCarRequest addCarsRequest) {
+        carService.add(addCarsRequest);
     }
+
     @PutMapping("{id}")
-    public void update(@RequestBody UpdateCarRequest updateCarRequest,@PathVariable int id){
-        Car car =carRepository.findById(id).orElseThrow();
-
-        car.setModelYear(updateCarRequest.getYear());
-        car.setModelName(updateCarRequest.getName());
-        car.setColor(updateCarRequest.getColor());
-
-        carRepository.save(car);
+    public void update(@PathVariable int id, UpdateCarRequest updateCarsRequest) {
+        carService.update(id, updateCarsRequest);
     }
+
     @DeleteMapping("{id}")
-    public void delete (@PathVariable int id){
-        carRepository.deleteById(id);
+    public void delete(@PathVariable int id) {
+        carService.delete(id);
     }
 }

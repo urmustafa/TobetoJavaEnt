@@ -1,9 +1,9 @@
 package com.rentacar.spring1b.controllers;
 
-import com.rentacar.spring1b.dtos.requests.order.AddOrderRequest;
-import com.rentacar.spring1b.dtos.requests.order.UpdateOrderRequest;
-import com.rentacar.spring1b.dtos.responses.order.GetOrderListResponse;
-import com.rentacar.spring1b.dtos.responses.order.GetOrderResponse;
+import com.rentacar.spring1b.services.dtos.requests.order.AddOrderRequest;
+import com.rentacar.spring1b.services.dtos.requests.order.UpdateOrderRequest;
+import com.rentacar.spring1b.services.dtos.responses.order.GetOrderListResponse;
+import com.rentacar.spring1b.services.dtos.responses.order.GetOrderResponse;
 import com.rentacar.spring1b.entities.Order;
 import com.rentacar.spring1b.repositories.OrderRepository;
 import org.springframework.web.bind.annotation.*;

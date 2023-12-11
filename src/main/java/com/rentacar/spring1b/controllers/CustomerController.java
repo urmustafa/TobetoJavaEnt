@@ -1,76 +1,59 @@
 package com.rentacar.spring1b.controllers;
 
-import com.rentacar.spring1b.dtos.requests.customer.AddCustomerRequest;
-import com.rentacar.spring1b.dtos.requests.customer.UpdateCustomerRequest;
-import com.rentacar.spring1b.dtos.responses.customer.GetCustomerListResponse;
-import com.rentacar.spring1b.dtos.responses.customer.GetCustomerResponse;
+import com.rentacar.spring1b.services.abstracts.CustomerService;
+import com.rentacar.spring1b.services.dtos.requests.customer.AddCustomerRequest;
+import com.rentacar.spring1b.services.dtos.requests.customer.UpdateCustomerRequest;
+import com.rentacar.spring1b.services.dtos.responses.customer.GetCustomerListResponse;
+import com.rentacar.spring1b.services.dtos.responses.customer.GetCustomerResponse;
 import com.rentacar.spring1b.entities.Customer;
 import com.rentacar.spring1b.repositories.CustomerRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/customer")
+@AllArgsConstructor
 public class CustomerController {
-    private final CustomerRepository customerRepository;
+    private final CustomerService customerService;
 
-    public CustomerController(CustomerRepository customerRepository){
-        this.customerRepository=customerRepository;
-    }
     @GetMapping
-    public GetCustomerListResponse getAll(){
-        GetCustomerListResponse customerList = new GetCustomerListResponse();
-        customerList.setCustomers(customerRepository.findAll());
-        return customerList;
+    public List<GetCustomerListResponse> getAll() {
+        return customerService.getAll();
     }
-
 
     @GetMapping("{id}")
-    public GetCustomerResponse getById(@PathVariable int id){
-        Customer customer = customerRepository.findById(id).orElseThrow();
-
-        GetCustomerResponse customerDto = new GetCustomerResponse();
-        customerDto.setName(customer.getName());
-        customerDto.setSurname(customer.getSurname());
-       // customerDto.setEmail(customer.getEmail());
-        customerDto.setPhone(customer.getPhone());
-
-
-        return customerDto;
-
-
-
+    public GetCustomerResponse getById(@PathVariable int id) {
+        return customerService.getById(id);
     }
 
     @PostMapping
-    public void add(@RequestBody AddCustomerRequest addCustomerRequest){
-        Customer customer = new Customer();
-
-        customer.setName(addCustomerRequest.getName());
-        customer.setSurname(addCustomerRequest.getSurname());
-       // customer.setEmail(addCustomerRequest.getEmail());
-        customer.setPhone(addCustomerRequest.getPhone());
-
-        customerRepository.save(customer);
-
-
+    public void add(@RequestBody AddCustomerRequest addCustomerRequest) {
+        customerService.add(addCustomerRequest);
     }
 
-    @PutMapping("{id}")
-    public void update(@RequestBody UpdateCustomerRequest updateCustomerRequest, @PathVariable int id){
-        Customer customer = customerRepository.findById(id).orElseThrow();
-
-        customer.setName(updateCustomerRequest.getName());
-        customer.setSurname(updateCustomerRequest.getSurname());
-        //customer.setEmail(updateCustomerRequest.getEmail());
-        customer.setPhone(updateCustomerRequest.getPhone());
-
-        customerRepository.save(customer);
-
-
+    @PutMapping
+    public void update(@PathVariable int id, UpdateCustomerRequest updateCustomerRequest) {
+        customerService.update(id, updateCustomerRequest);
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable int id){
-        customerRepository.deleteById(id);
+    public void delete(@PathVariable int id) {
+        customerService.delete(id);
     }
+    @GetMapping("/search")
+    public List<GetCustomerListResponse> getUsersByNames(
+            @RequestParam String firstName,
+            @RequestParam String lastName) {
+        return this.customerService.getCustomerByName(firstName, lastName);
+    }
+
+
+
+
+
 }
+
+
+
